@@ -17,7 +17,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 
 class LaporanPeminjaman extends Page implements HasTable
-{.
+{
     use InteractsWithTable;
 
     protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-document-text';
