@@ -3,6 +3,7 @@
 namespace App\Filament\Admin\Resources\AlatResource\Pages;
 
 use App\Filament\Admin\Resources\AlatResource;
+use Filament\Actions; // v3 menggunakan Actions
 use Filament\Resources\Pages\ListRecords;
 
 class ListAlats extends ListRecords
@@ -12,7 +13,7 @@ class ListAlats extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            \Filament\Actions\CreateAction::make(),
+            Actions\CreateAction::make(),
         ];
     }
 }

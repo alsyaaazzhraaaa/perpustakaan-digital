@@ -3,23 +3,29 @@
 namespace App\Filament\Admin\Widgets;
 
 use App\Models\Peminjaman;
-use Filament\Actions\Action;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Filament\Tables\Actions\Action;
 use Filament\Widgets\TableWidget as BaseWidget;
 
 class MyLoansWidget extends BaseWidget
 {
     protected static ?string $heading = 'Peminjaman Saya';
-
     protected int|string|array $columnSpan = 'full';
+    protected static ?int $sort = 4;
+
+    // Hanya Peminjam yang bisa lihat widget ini
+    public static function canView(): bool
+    {
+        return auth()->check() && auth()->user()->isPeminjam();
+    }
 
     public function table(Table $table): Table
     {
         return $table
             ->query(
                 Peminjaman::query()
-                    ->where('id_user', auth()->id())
+                    ->where('id_user', auth()->id()) // Filter punya sendiri
                     ->latest()
                     ->limit(5)
             )
@@ -39,14 +45,18 @@ class MyLoansWidget extends BaseWidget
                         'dikembalikan' => 'info',
                         default => 'gray',
                     }),
-                Tables\Columns\TextColumn::make('detailPeminjaman')
+                Tables\Columns\TextColumn::make('detailPeminjaman_count') // Cara lebih efisien di Filament
                     ->label('Jumlah Alat')
-                    ->getStateUsing(fn(Peminjaman $record) => $record->detailPeminjaman->count() . ' alat'),
+                    ->getStateUsing(function (Peminjaman $record) {
+                        // Pengaman: Jika relasi null, tampilkan 0
+                        $count = $record->detailPeminjaman()->count() ?? 0;
+                        return $count . ' alat';
+                    }),
             ])
             ->actions([
                 Action::make('lihat')
                     ->label('Lihat')
-                    ->url(fn(Peminjaman $record) => route('filament.admin.resources.peminjamans.view', $record))
+                    ->url(fn(Peminjaman $record) => route('filament.admin.resources.peminjaman.view', $record))
                     ->icon('heroicon-o-eye'),
             ])
             ->paginated(false);

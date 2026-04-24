@@ -12,12 +12,14 @@ use Illuminate\Support\Carbon;
 
 class LaporanPeminjaman extends Page
 {
-    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-document-text';
-    protected static string | \UnitEnum | null $navigationGroup = 'Laporan';
+    // PERBAIKAN: Gunakan ?string untuk kompatibilitas Filament v3
+    protected static ?string $navigationIcon = 'heroicon-o-document-text';
+    protected static ?string $navigationGroup = 'Laporan';
     protected static ?string $title = 'Laporan Peminjaman';
     protected static ?string $slug = 'laporan-peminjaman';
 
-    protected string $view = 'filament.pages.laporan-peminjaman';
+    // PERBAIKAN: Harus ditambahkan kata 'static'
+    protected static string $view = 'filament.pages.laporan-peminjaman';
 
     public ?string $pdfData    = null;
     public ?string $filterFrom  = null;
@@ -112,7 +114,7 @@ class LaporanPeminjaman extends Page
                     $this->filterUntil  = $data['until'] ?? null;
                     $this->filterStatus = $data['status'] ?? null;
 
-                    $query = \App\Models\Peminjaman::query()->with(['user', 'approver'])->orderBy('created_at', 'desc');
+                    $query = Peminjaman::query()->with(['user', 'approver'])->orderBy('created_at', 'desc');
 
                     if ($this->filterFrom) {
                         $query->whereDate('tanggal_pinjam', '>=', $this->filterFrom);
@@ -124,7 +126,7 @@ class LaporanPeminjaman extends Page
                         $query->where('status', $this->filterStatus);
                     }
 
-                    $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('pdf.laporan-peminjaman', [
+                    $pdf = Pdf::loadView('pdf.laporan-peminjaman', [
                         'data'      => $query->get(),
                         'startDate' => $this->filterFrom,
                         'endDate'   => $this->filterUntil,

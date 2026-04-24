@@ -11,12 +11,14 @@ use Illuminate\Support\Carbon;
 
 class LaporanPengembalian extends Page
 {
-    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-document-text';
-    protected static string | \UnitEnum | null $navigationGroup = 'Laporan';
+    // PERBAIKAN: Menggunakan ?string agar kompatibel dengan Filament v3
+    protected static ?string $navigationIcon = 'heroicon-o-document-text';
+    protected static ?string $navigationGroup = 'Laporan';
     protected static ?string $title = 'Laporan Pengembalian';
     protected static ?string $slug = 'laporan-pengembalian';
 
-    protected string $view = 'filament.pages.laporan-pengembalian';
+    // PERBAIKAN: Menambahkan kata kunci 'static'
+    protected static string $view = 'filament.pages.laporan-pengembalian';
 
     public ?string $pdfData     = null;
     public ?string $filterStart = null;

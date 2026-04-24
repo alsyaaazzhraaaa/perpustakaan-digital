@@ -1,6 +1,7 @@
 <?php
 
-use Illuminate\Support\Facades\Artisan;
+namespace App\Console\Commands; // TAMBAHKAN BARIS INI
+
 use Illuminate\Console\Command;
 use App\Models\Peminjaman;
 

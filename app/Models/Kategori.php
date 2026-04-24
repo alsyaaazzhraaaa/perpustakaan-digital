@@ -4,26 +4,23 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Kategori extends Model
 {
-    use HasFactory;
+    protected $table = 'kategori'; 
+    
+    // ✅ FIX: Ganti ke 'id' jika di database kolomnya cuma 'id'
+    // Ini yang bikin error SQL "Column not found" tadi ilang.
+    protected $primaryKey = 'id'; 
 
     public $timestamps = false;
 
+    protected $fillable = ['nama_kategori', 'keterangan'];
 
-    protected $table = 'kategori';
-    protected $primaryKey = 'id';
-
-    protected $fillable = [
-        'nama_kategori',
-        'keterangan',
-    ];
-
-
-    public function alat(): HasMany
+    public function alats(): HasMany
     {
-        return $this->hasMany(Alat::class, 'id_kategori');
+        // Parameter 2: Foreign Key di tabel alat (tetap id_kategori)
+        // Parameter 3: Local Key di tabel kategori (sekarang 'id')
+        return $this->hasMany(Alat::class, 'id_kategori', 'id');
     }
 }

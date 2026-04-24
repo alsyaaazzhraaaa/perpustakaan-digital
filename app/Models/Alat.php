@@ -2,60 +2,33 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Alat extends Model
 {
     use HasFactory;
 
+    protected $table = 'alat';
+    
+    // ✅ FIX: Ganti ke 'id' karena SQL lu bilang 'id_alat' nggak ada
+    protected $primaryKey = 'id'; 
+
     public $timestamps = false;
 
-
-    protected $table = 'alat';
-    protected $primaryKey = 'id';
-
-
     protected $fillable = [
-        'id_kategori',
         'nama_alat',
+        'id_kategori',
         'harga',
         'jumlah',
         'kondisi',
         'status',
     ];
 
-
-    protected function casts(): array
-    {
-        return [
-            'created_at' => 'datetime',
-        ];
-    }
-
-
     public function kategori(): BelongsTo
     {
-        return $this->belongsTo(Kategori::class, 'id_kategori');
-    }
-
-
-    public function detailPeminjaman(): HasMany
-    {
-        return $this->hasMany(DetailPeminjaman::class, 'id_alat');
-    }
-
-
-    public function isAvailable(): bool
-    {
-        return $this->status === 'tersedia' && $this->jumlah > 0;
-    }
-
-
-    public function getAvailableStockAttribute(): int
-    {
-        return $this->jumlah;
+        // Parameter 3 disesuaikan ke 'id' (Primary Key Kategori)
+        return $this->belongsTo(Kategori::class, 'id_kategori', 'id');
     }
 }

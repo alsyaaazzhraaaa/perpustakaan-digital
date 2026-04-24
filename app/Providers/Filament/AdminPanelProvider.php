@@ -2,8 +2,8 @@
 
 namespace App\Providers\Filament;
 
-use App\Filament\Pages\Auth\Login;
 use App\Filament\Admin\Pages\Dashboard;
+use App\Filament\Admin\Widgets\StatsOverviewWidget;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -26,14 +26,16 @@ class AdminPanelProvider extends PanelProvider
         return $panel
             ->default()
             ->id('admin')
-            ->path('admin/dashboard')
+            ->path('admin')
+            ->login() // Mengaktifkan login standar Filament
             ->colors([
                 'primary' => Color::Blue,
                 'danger' => Color::Red,
-                'success' => Color::Green,
+                'success' => Color::Emerald,
                 'warning' => Color::Amber,
+                'info' => Color::Sky,
             ])
-            ->brandName('Peminjaman Alat')
+            ->brandName('Sistem Perpustakaan')
             ->discoverResources(in: app_path('Filament/Admin/Resources'), for: 'App\\Filament\\Admin\\Resources')
             ->discoverPages(in: app_path('Filament/Admin/Pages'), for: 'App\\Filament\\Admin\\Pages')
             ->pages([
@@ -42,6 +44,7 @@ class AdminPanelProvider extends PanelProvider
             ->discoverWidgets(in: app_path('Filament/Admin/Widgets'), for: 'App\\Filament\\Admin\\Widgets')
             ->widgets([
                 AccountWidget::class,
+                StatsOverviewWidget::class,
             ])
             ->middleware([
                 EncryptCookies::class,
@@ -52,7 +55,7 @@ class AdminPanelProvider extends PanelProvider
                 VerifyCsrfToken::class,
                 SubstituteBindings::class,
                 DisableBladeIconComponents::class,
-                DispatchServingFilamentEvent::class,
+                DispatchServingFilamentEvent::class, // Sudah diperbaiki (Filament pakai 'i')
             ])
             ->authMiddleware([
                 Authenticate::class,
